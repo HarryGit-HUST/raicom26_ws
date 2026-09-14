@@ -194,6 +194,7 @@ int main(int argc, char **argv)
                                  active_case, TRAV_CASE_DESC[active_case]);
                         current_state    = TRAVERSE_LEG2;
                         leg_start_time   = ros::Time::now();
+                        resetTraverseTracker();
                         state_start_time = ros::Time::now();
                         break;
                     }
@@ -236,6 +237,7 @@ int main(int argc, char **argv)
                         current_state    = TRAVERSE_LEG2;
                         scan_sub_state   = 0;
                         leg_start_time   = ros::Time::now();
+                        resetTraverseTracker();
                         state_start_time = ros::Time::now();
                     }
                     else
@@ -277,6 +279,7 @@ int main(int argc, char **argv)
                         current_state    = TRAVERSE_LEG2;
                         scan_sub_state   = 0;
                         leg_start_time   = ros::Time::now();
+                        resetTraverseTracker();
                         state_start_time = ros::Time::now();
                     }
                     else
@@ -500,11 +503,13 @@ int main(int argc, char **argv)
                     // 返程直通：投放/射击点 -> 倒放绕柱 -> 穿环 -> 起飞点
                     current_state  = TRAVERSE_RETURN_HOME;
                     leg_start_time = ros::Time::now();
+                    resetTraverseTracker();
                     ROS_INFO("[射击] 射击完成，返程直通轨迹已规划（穿环不停顿）");
                 }
                 else {
                     current_state  = TRAVERSE_RETURN_LEG2;  // 回退：分段返程（倒放leg2停悬停点再穿环）
                     leg_start_time = ros::Time::now();
+                    resetTraverseTracker();
                 }
                 state_start_time = ros::Time::now();
                 ROS_INFO("[射击] 射击完成，开始返程");

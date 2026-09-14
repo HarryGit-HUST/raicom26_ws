@@ -9,6 +9,19 @@ p_z: 0.8                            # 垂直位置误差 -> 速度增益
 
 # 主控仅使用 PCL 检测 + 本地平滑轨迹；穿越参数和地图由 traverse_map.yaml 提供。
 
+# ==================== 样条投影前视跟踪 ====================
+# 在线进度来自“当前位置在样条上的投影”，不按运行时间推进。
+# 前视距离 = lookahead_min + lookahead_time × min(当前水平速度, 样条规划速度)，并限制在 min/max 内。
+traverse:
+  tracker:
+    lookahead_min: 0.15              # 静止/低速时也向前给一点目标，避免停滞（m）
+    lookahead_max: 0.40              # 高速时最大前视，过大可能切弯、贴近柱子（m）
+    lookahead_time: 0.60             # 按实速增加前视的时间系数（s）
+    projection_forward_window: 1.00  # 最近点只在当前进度前方该范围搜索，防跳弯（m）
+    projection_backtrack: 0.05       # 允许投影回看，但已接受的进度仍不会后退（m）
+    recovery_enter_error: 0.12       # 距轨迹超过此值：取消前视，先回到投影点（m）
+    recovery_exit_error: 0.06        # 回到此误差内：恢复前视；与进入阈值形成滞回（m）
+
 # ==================== 原地旋转射击 ====================
 # 投货结束后保持 wp_drop_area 不移动，只旋转机头瞄准目标。
 # A/B 角度均相对起飞时记录的 init_yaw：正值逆时针，负值顺时针。
